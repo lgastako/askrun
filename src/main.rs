@@ -9,13 +9,14 @@ fn main() -> io::Result<()> {
 
     for line in handle.lines() {
         command_string += &line?;
+        command_string.push_str("\n");
     }
 
     let tty = std::fs::OpenOptions::new().read(true).write(true).open("/dev/tty")?;
     let mut tty_reader = io::BufReader::new(&tty);
     let mut tty_writer = io::BufWriter::new(&tty);
 
-    writeln!(tty_writer, "You are about to execute: '{}'.\nAre you sure? (y/n)", command_string.trim())?;
+    writeln!(tty_writer, "You are about to execute:\n\n{}.\n\nAre you sure? (y/n)", command_string.trim())?;
     tty_writer.flush()?;
 
     let mut confirmation = String::new();
